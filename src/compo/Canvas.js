@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 const MyCanvas = styled.div`
     margin: 10px 10px;
     border: 1px solid black;
@@ -8,6 +9,8 @@ const MyCanvas = styled.div`
 `;
 
 export default function Canvas() {
+    const toolWithColor = useSelector((state) => state);
+    console.log(toolWithColor);
     return (
         <>
             <MyCanvas>Canvas</MyCanvas>

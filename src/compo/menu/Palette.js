@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { defaultColorList } from '../../Common/colors';
-import { tools, toolname } from '../../Common/tools';
+import { toolname } from '../../Common/tools';
 import Paint from './Palette/Paint';
 import Tool from './Palette/Tool';
 const PaletteContainer = styled.div`

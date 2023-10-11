@@ -10,5 +10,13 @@ const tools = {
 };
 
 const toolname = ['PENCIL', 'BRUSH', 'SPOIDS', 'TEXTBOX', 'ERASER', 'BEAKER'];
+const toolUppername = {
+    PENCIL: 'PENCIL',
+    BRUSH: 'BRUSH',
+    SPOIDS: 'SPOIDS',
+    TEXTBOX: 'TEXTBOX',
+    ERASER: 'ERASER',
+    BEAKER: 'BEAKER',
+};
 
-export { tools, toolname };
+export { tools, toolname, toolUppername };

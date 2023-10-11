@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import Main from '../page/Main';
 import PaintBoard from '../page/PaintBoard';
 import NotFound from '../page/NotFound';

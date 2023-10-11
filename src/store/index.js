@@ -1,25 +1,24 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { composeWithDevTools } from 'redux-devtools-extension';
-const initCounterState = {
-    counter: 0,
+import { toolUppername } from '../Common/tools';
+const initState = {
+    color: 'black',
+    tool: toolUppername.PENCIL,
 };
 //createSlice() reduce와 액션같이 생성
 const canvasSlice = createSlice({
     name: 'counter',
-    initialState: initCounterState,
+    initialState: initState,
     reducers: {
-        increment(state) {
-            state.counter++;
+        setColor(state, action) {
+            // console.log('state : ', state);
+            // console.log('action : ', action.payload);
+            const { color } = action.payload;
+            state.color = color;
         },
-        decrement(state) {
-            state.counter--;
-        },
-        increase(state, action) {
-            state.counter += action.payload;
-        },
-        Hicalc(state, action) {
-            const { num1, num2 } = action.payload;
-            state.counter += num1 + num2;
+        setTool(state, action) {
+            const { tool } = action.payload;
+            state.tool = tool;
         },
     },
 });
@@ -31,5 +30,33 @@ const canvasStore = configureStore(
     composeWithDevTools
 );
 
-export const counterAction = canvasSlice.actions;
+export const canvasAction = canvasSlice.actions;
 export default canvasStore;
+
+// setGray(state) {
+//     state.color = defaultColor.gray;
+// },
+// setRed(state) {
+//     state.color = defaultColor.red;
+// },
+// setOrange(state) {
+//     state.color = defaultColor.orange;
+// },
+// setYellow(state) {
+//     state.color = defaultColor.yellow;
+// },
+// setGreen(state) {
+//     state.color = defaultColor.green;
+// },
+// setBlue(state) {
+//     state.color = defaultColor.blue;
+// },
+// setIndigo(state) {
+//     state.color = defaultColor.indigo;
+// },
+// setPurple(state) {
+//     state.color = defaultColor.purple;
+// },
+// setBlack(state) {
+//     state.color = defaultColor.black;
+// },
