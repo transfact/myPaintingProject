@@ -1,8 +1,9 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { toolUppername } from '../Common/tools';
+import { defaultColor } from '../Common/colors';
 const initState = {
-    color: 'black',
+    color: defaultColor.black,
     tool: toolUppername.PENCIL,
 };
 //createSlice() reduce와 액션같이 생성

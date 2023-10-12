@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toolUppername } from '../Common/tools';
 import { canvasAction } from '../store';
 const canvasStyle = {
+    //안하면 투명도를 0으로 해버리더라. 이게 맞아요 크롬님?
+    backgroundColor: 'white',
     border: '1px solid black',
     borderRadius: '5px',
     margin: '10px 10px',
@@ -13,13 +15,6 @@ const NewCanvas = ({ width, height }) => {
     const { color, tool } = useSelector((state) => state.canvas);
     // console.log('tool : ', tool);
     // console.log('color : ', color);
-    const setPixel = (imageData, x, y, color) => {
-        const offset = (y * imageData.width + x) * 4;
-        imageData.data[offset + 0] = color[0];
-        imageData.data[offset + 1] = color[1];
-        imageData.data[offset + 2] = color[2];
-        imageData.data[offset + 3] = color[3];
-    };
 
     function onDraw(ctx, point, prevPoint) {
         switch (tool) {
@@ -47,15 +42,11 @@ const NewCanvas = ({ width, height }) => {
         //3. 플러드필 알고리즘을 활용하여 닫힌 부분을 타겟컬러로 채운다.
         function floodFill(newColor, start_x, start_y) {
             //1. 이미지의 전체를 가져오고,
+
             const imageData = ctx.getImageData(0, 0, width, height);
             //2. 클릭한 곳의 픽셀 컬러와 좌표를 얻는다.
             const targetColor = getPixelColor(imageData, start_x, start_y);
-            console.log('targetColor:', targetColor[0]);
-
-            if (targetColor[0] === 0 && targetColor[1] === 0 && targetColor[2] === 0) {
-                console.log('임시 에러 정지');
-                return imageData;
-            }
+            console.log('targetColor:', targetColor);
 
             const visited = new Uint8Array(imageData.width, imageData.height);
             const stack = [{ x: start_x, y: start_y }];
@@ -64,28 +55,39 @@ const NewCanvas = ({ width, height }) => {
                 const child = stack.pop();
                 // console.log(stack.length);
                 //열린 경우에는 채우지 않을 것임.
-                console.log('stack', stack.length);
-                if (!child) {
-                    console.log('2');
-                    return;
+                // console.log('stack', stack.length);
+                //700*500이면 stack이 35000넘기기 힘들것같은데 무한루프 방지
+                //일반화하면 width * height. 좀 줄여도 될것같긴한데... 증명을 못하는 문제.
+                if (!child || stack.length > width * height) {
+                    return imageData;
                 }
                 const currentColor = getPixelColor(imageData, child.x, child.y);
-                console.log('color:', currentColor);
+                // console.log('color:', currentColor);
                 if (
-                    !visited[child.y * imageData.width + child.x] &&
                     isSameColor(currentColor, targetColor) //  (3)
                 ) {
-                    setPixel(imageData, child.x, child.y, [255, 255, 0]); // (4)
+                    setPixel(imageData, child.x, child.y, newColor); // (4)
                     visited[child.y * imageData.width + child.x] = 1;
-                    stack.push({ x: child.x + 1, y: child.y });
-                    stack.push({ x: child.x - 1, y: child.y });
-                    stack.push({ x: child.x, y: child.y + 1 });
-                    stack.push({ x: child.x, y: child.y - 1 });
+                    if (!visited[child.y * imageData.width + child.x + 1]) {
+                        stack.push({ x: child.x + 1, y: child.y });
+                    }
+                    if (!visited[child.y * imageData.width + child.x - 1]) {
+                        stack.push({ x: child.x - 1, y: child.y });
+                    }
+                    if (!visited[(child.y + 1) * imageData.width + child.x]) {
+                        stack.push({ x: child.x, y: child.y + 1 });
+                    }
+                    if (!visited[(child.y - 1) * imageData.width + child.x]) {
+                        stack.push({ x: child.x, y: child.y - 1 });
+                    }
                 }
             }
             return imageData;
         }
-        const newImgData = floodFill(color, parseInt(end.x), parseInt(end.y));
+
+        const convertedColor = hexToRgb(color);
+        console.log('convertedColor:', convertedColor);
+        const newImgData = floodFill(convertedColor, parseInt(end.x), parseInt(end.y));
         ctx.putImageData(newImgData, 0, 0);
     }
 
@@ -115,6 +117,26 @@ const NewCanvas = ({ width, height }) => {
 };
 
 export default NewCanvas;
+const setPixel = (imageData, x, y, color) => {
+    // console.log(x, y, color, imageData);
+    const offset = (y * imageData.width + x) * 4;
+    imageData.data[offset + 0] = color[0];
+    imageData.data[offset + 1] = color[1];
+    imageData.data[offset + 2] = color[2];
+    imageData.data[offset + 3] = color[3];
+};
+function hexToRgb(hex, alpha = -1) {
+    let r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+
+    if (0 <= alpha && alpha <= 1) {
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    } else {
+        return [r, g, b, 255];
+    }
+}
+
 function RGBAToHexA(rgba, forceRemoveAlpha = false) {
     return (
         '#' +
