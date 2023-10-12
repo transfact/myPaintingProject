@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import CanvasRouter from './router/CanvasRouter';
 import canvasReducer from './store/index';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
