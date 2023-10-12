@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil, faBrush, faEyeDropper, faFont, faEraser, faFlaskVial } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faBrush, faEyeDropper, faFont, faEraser, faFlaskVial, faBroom } from '@fortawesome/free-solid-svg-icons';
 //순서대로 pencil,brush,spoids, textbox,eraser,beaker
 import { toolUppername } from '../../../Common/tools';
 import { useDispatch } from 'react-redux';
@@ -55,6 +55,12 @@ export default function Tool(props) {
             return (
                 <ToolBox onClick={setTool}>
                     <FontAwesomeIcon icon={faFlaskVial} />
+                </ToolBox>
+            );
+        case toolUppername.CLEAR:
+            return (
+                <ToolBox onClick={setTool}>
+                    <FontAwesomeIcon icon={faBroom} />
                 </ToolBox>
             );
         default:
