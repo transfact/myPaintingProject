@@ -11,7 +11,6 @@ const canvasSlice = createSlice({
     initialState: initState,
     reducers: {
         setColor(state, action) {
-            // console.log('state : ', state);
             // console.log('action : ', action.payload);
             const { color } = action.payload;
             state.color = color;

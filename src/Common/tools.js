@@ -7,9 +7,10 @@ const tools = {
     TEXTBOX: 3,
     ERASER: 4,
     BEAKER: 5,
+    CLEAR: 6,
 };
 
-const toolname = ['PENCIL', 'BRUSH', 'SPOIDS', 'TEXTBOX', 'ERASER', 'BEAKER'];
+const toolname = ['PENCIL', 'BRUSH', 'SPOIDS', 'TEXTBOX', 'ERASER', 'BEAKER', 'CLEAR'];
 const toolUppername = {
     PENCIL: 'PENCIL',
     BRUSH: 'BRUSH',
@@ -17,6 +18,7 @@ const toolUppername = {
     TEXTBOX: 'TEXTBOX',
     ERASER: 'ERASER',
     BEAKER: 'BEAKER',
+    CLEAR: 'CLEAR',
 };
 
 export { tools, toolname, toolUppername };
