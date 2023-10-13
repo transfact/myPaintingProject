@@ -5,6 +5,11 @@ import { defaultColor } from '../Common/colors';
 const initState = {
     color: defaultColor.black,
     tool: toolUppername.PENCIL,
+    EditText: {
+        coordX: -1,
+        coordY: -1,
+        text: '',
+    },
 };
 //createSlice() reduce와 액션같이 생성
 const canvasSlice = createSlice({
@@ -20,17 +25,40 @@ const canvasSlice = createSlice({
             const { tool } = action.payload;
             state.tool = tool;
         },
+        setEditInput(state, action) {
+            state.EditText = { coordX: action.payload.coordX, coordY: action.payload.coordY, text: action.payload.newInput };
+        },
     },
 });
 
+const initMouseState = {
+    coordX: -1,
+    coordY: -1,
+    src: '',
+};
+//createSlice() reduce와 액션같이 생성
+const mouseSlice = createSlice({
+    name: 'mouseCount',
+    initialState: initMouseState,
+    reducers: {
+        setMouse(state, action) {
+            // console.log('action : ', action.payload);
+            const { coordX, coordY, src } = action.payload;
+            state.coordX = coordX;
+            state.coordY = coordY;
+            state.src = src;
+        },
+    },
+});
 const canvasStore = configureStore(
     {
-        reducer: { canvas: canvasSlice.reducer },
+        reducer: { canvas: canvasSlice.reducer, mouse: mouseSlice.reducer },
     },
     composeWithDevTools
 );
 
 export const canvasAction = canvasSlice.actions;
+export const mouseAction = mouseSlice.actions;
 export default canvasStore;
 
 // setGray(state) {

@@ -8,6 +8,7 @@ export function useOnDraw(onDraw) {
     const prevPointRef = useRef(null);
     //clickRef
     const { tool, color } = useSelector((state) => state.canvas);
+    const { coordX, coordY, src } = useSelector((state) => state.mouse);
 
     const mouseMoveListenerRef = useRef(null);
     const mouseUpListenerRef = useRef(null);
@@ -33,6 +34,27 @@ export function useOnDraw(onDraw) {
             ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
         }
     }, [tool]);
+
+    useEffect(() => {
+        function computePointInCanvas(clientX, clientY) {
+            if (canvasRef.current) {
+                const boundingRect = canvasRef.current.getBoundingClientRect();
+                return {
+                    x: clientX - boundingRect.left,
+                    y: clientY - boundingRect.top,
+                };
+            } else {
+                return null;
+            }
+        }
+        if (coordX > 0 && coordY > 0) {
+            const point = computePointInCanvas(coordX, coordY);
+            let newImage = new Image();
+            newImage.src = src;
+            const ctx = canvasRef.current.getContext('2d');
+            ctx.drawImage(newImage, point.x, point.y);
+        }
+    }, [coordY]);
 
     useEffect(() => {
         function computePointInCanvas(clientX, clientY) {
@@ -88,6 +110,7 @@ export function useOnDraw(onDraw) {
             mouseDownListenerRef.current = listener;
             window.addEventListener('mousedown', listener);
         }
+
         function cleanup() {
             if (mouseMoveListenerRef.current) {
                 window.removeEventListener('mousemove', mouseMoveListenerRef.current);

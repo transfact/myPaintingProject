@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { customGray } from '../../Common/colors';
 import { useRef, useState } from 'react';

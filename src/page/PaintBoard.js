@@ -2,9 +2,6 @@ import TabView from '../compo/TabView';
 import Menu from '../compo/Menu';
 import styled from 'styled-components';
 import Canvas from '../compo/Canvas';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 const Container = styled.div``;
 const MenuContainer = styled.div``;
@@ -23,7 +20,6 @@ export default function PaintBoard() {
             </MenuContainer>
             <WorkBenchContainer>
                 <Canvas width={700} height={500}></Canvas>
-                {/* <Canvas></Canvas> */}
                 <TabView></TabView>
             </WorkBenchContainer>
         </Container>

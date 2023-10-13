@@ -7,7 +7,7 @@ const PaletteContainer = styled.div`
     display: flex;
 `;
 export default function Palette() {
-    console.log(toolname);
+    // console.log(toolname);
     return (
         <>
             <PaletteContainer>

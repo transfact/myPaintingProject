@@ -1,9 +1,12 @@
 import { useOnDraw } from './hook/useOnDraw';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toolUppername } from '../Common/tools';
 import { canvasAction } from '../store';
+import TextBox from './menu/TextBox';
 const canvasStyle = {
     //안하면 투명도를 0으로 해버리더라. 이게 맞아요 크롬님?
+
     backgroundColor: 'white',
     border: '1px solid black',
     borderRadius: '5px',
@@ -12,9 +15,18 @@ const canvasStyle = {
 const NewCanvas = ({ width, height }) => {
     const dispatch = useDispatch();
     const { setCanvasRef, onCanvasMouseDown, onCanvasMouseUp } = useOnDraw(onDraw);
-    const { color, tool } = useSelector((state) => state.canvas);
+    const { color, tool, EditText } = useSelector((state) => state.canvas);
+
+    const [EditInput, setEditInput] = useState(null);
+
     // console.log('tool : ', tool);
     // console.log('color : ', color);
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && EditText.coordX !== -1 && EditText.coordY !== -1) {
+            console.log('EditText : ', EditText);
+        }
+    };
 
     function onDraw(ctx, point, prevPoint) {
         switch (tool) {
@@ -22,7 +34,7 @@ const NewCanvas = ({ width, height }) => {
                 drawLine(prevPoint, point, ctx, color, 3);
                 break;
             case toolUppername.ERASER:
-                drawLine(prevPoint, point, ctx, 'white', 10);
+                drawLine(prevPoint, point, ctx, '#FFFFFF', 10);
                 break;
             case toolUppername.BRUSH:
                 drawLine(prevPoint, point, ctx, color, 7);
@@ -33,10 +45,22 @@ const NewCanvas = ({ width, height }) => {
             case toolUppername.BEAKER:
                 fillPartial(point, ctx);
                 break;
+            case toolUppername.TEXTBOX:
+                drawTextBox(point, ctx);
+                break;
+
             default:
                 console.log('에러', tool);
         }
     }
+    function drawTextBox(end, ctx) {
+        console.log('TEXTBOX');
+        const input2 = <TextBox setKill={setEditInput} ctx={ctx} coord={{ x: `${end.x}`, y: `${end.y}` }}></TextBox>;
+        setEditInput(input2);
+    }
+    // const pixelRGBA = ctx.getImageData(end.x, end.y, 1, 1).data;
+    // const strRGBA = RGBAToHexA(`rgba(${pixelRGBA.toString()})`, true);
+    // dispatch(canvasAction.setColor({ color: strRGBA }));
 
     function fillPartial(end, ctx) {
         //3. 플러드필 알고리즘을 활용하여 닫힌 부분을 타겟컬러로 채운다.
@@ -113,10 +137,16 @@ const NewCanvas = ({ width, height }) => {
         ctx.fill();
     }
 
-    return <canvas width={width} height={height} onMouseUp={onCanvasMouseUp} onMouseDown={onCanvasMouseDown} style={canvasStyle} ref={setCanvasRef} />;
+    return (
+        <div style={{ position: 'relative' }}>
+            {EditInput ? EditInput : null}
+            <canvas width={width} height={height} onKeyDown={handleKeyDown} onMouseUp={onCanvasMouseUp} onMouseDown={onCanvasMouseDown} style={canvasStyle} ref={setCanvasRef} />
+        </div>
+    );
 };
 
 export default NewCanvas;
+
 const setPixel = (imageData, x, y, color) => {
     // console.log(x, y, color, imageData);
     const offset = (y * imageData.width + x) * 4;
