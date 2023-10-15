@@ -50,15 +50,32 @@ const mouseSlice = createSlice({
         },
     },
 });
+
+const initCanvasState = {
+    myCanvas: false,
+};
+//createSlice() reduce와 액션같이 생성
+const saveSlice = createSlice({
+    name: 'saveCanvas',
+    initialState: initCanvasState,
+    reducers: {
+        setCanvas(state, action) {
+            // console.log('action : ', action.payload);
+            const { myCanvas } = action.payload;
+            state.myCanvas = myCanvas;
+        },
+    },
+});
 const canvasStore = configureStore(
     {
-        reducer: { canvas: canvasSlice.reducer, mouse: mouseSlice.reducer },
+        reducer: { canvas: canvasSlice.reducer, mouse: mouseSlice.reducer, myCanvas: saveSlice.reducer },
     },
     composeWithDevTools
 );
 
 export const canvasAction = canvasSlice.actions;
 export const mouseAction = mouseSlice.actions;
+export const saveAction = saveSlice.actions;
 export default canvasStore;
 
 // setGray(state) {

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { customGray } from '../../Common/colors';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { saveAction } from '../../store';
+import { useNavigate } from 'react-router-dom';
 
 const DropBtn = styled.button`
     background-color: ${customGray};
@@ -19,7 +22,10 @@ const DropUl = styled.ul`
 
 //일단 내보내기 닫기만
 export default function DropDownMenu() {
+    const navi = useNavigate();
+
     const [fileDrop, setFileDrop] = useState(false);
+    const dispatch = useDispatch();
     //이거 상태로 바꿔서 reducer로 내보내야함. 끼아아아악
     const handleDropDown = (e) => {
         const classList = e.target.className.split(' ');
@@ -28,6 +34,12 @@ export default function DropDownMenu() {
             setFileDrop(!fileDrop);
         }
     };
+    function saveCanvas() {
+        dispatch(saveAction.setCanvas({ myCanvas: true }));
+    }
+    function windowClose() {
+        navi('/');
+    }
     return (
         <>
             <DropBtn className="fileDrop" onClick={handleDropDown}>
@@ -35,8 +47,8 @@ export default function DropDownMenu() {
             </DropBtn>
             {fileDrop ? (
                 <DropUl className="fileMenu">
-                    <li>내보내기</li>
-                    <li>닫기</li>
+                    <li onClick={saveCanvas}>다운로드</li>
+                    <li onClick={windowClose}>닫기</li>
                 </DropUl>
             ) : null}
 

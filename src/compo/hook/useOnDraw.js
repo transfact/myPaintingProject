@@ -1,14 +1,17 @@
 import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { toolUppername } from '../../Common/tools';
-import { MOUSECLICK, MOUSEDRAG } from '../../Common/mouseState';
+import { mouseAction } from '../../store';
 export function useOnDraw(onDraw) {
+    const dispatch = useDispatch();
+
     const canvasRef = useRef(null);
     const isDrawingRef = useRef(false);
     const prevPointRef = useRef(null);
     //clickRef
     const { tool, color } = useSelector((state) => state.canvas);
     const { coordX, coordY, src } = useSelector((state) => state.mouse);
+    const { myCanvas } = useSelector((state) => state.myCanvas);
 
     const mouseMoveListenerRef = useRef(null);
     const mouseUpListenerRef = useRef(null);
@@ -36,25 +39,42 @@ export function useOnDraw(onDraw) {
     }, [tool]);
 
     useEffect(() => {
+        if (myCanvas) {
+            const ctx = canvasRef.current;
+            const image = ctx.toDataURL();
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'MyDesign';
+            link.click();
+        }
+    }, [myCanvas]);
+
+    useEffect(() => {
         function computePointInCanvas(clientX, clientY) {
             if (canvasRef.current) {
                 const boundingRect = canvasRef.current.getBoundingClientRect();
-                return {
-                    x: clientX - boundingRect.left,
-                    y: clientY - boundingRect.top,
-                };
+                if (clientX <= canvasRef.current.width && clientY <= canvasRef.current.height) {
+                    return {
+                        x: clientX - boundingRect.left,
+                        y: clientY - boundingRect.top,
+                    };
+                }
             } else {
                 return null;
             }
         }
-        if (coordX > 0 && coordY > 0) {
-            const point = computePointInCanvas(coordX, coordY);
+        const point = computePointInCanvas(coordX, coordY);
+        if (point) {
             let newImage = new Image();
             newImage.src = src;
+
             const ctx = canvasRef.current.getContext('2d');
-            ctx.drawImage(newImage, point.x, point.y);
+            ctx.drawImage(newImage, point.x, point.y, 200, 200 * (newImage.height / newImage.width));
+            setTimeout(() => {
+                dispatch(mouseAction.setMouse({ coordX: -1, coordY: -1, src: '' }));
+            }, 0);
         }
-    }, [coordY]);
+    }, [coordX, coordY, src]);
 
     useEffect(() => {
         function computePointInCanvas(clientX, clientY) {
