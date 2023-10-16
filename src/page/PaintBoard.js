@@ -15,7 +15,7 @@ const WorkBenchContainer = styled.div`
 export default function PaintBoard() {
     const [windowSize, setWindowSize] = useState([(window.innerWidth * 7) / 10, window.innerHeight / 2]);
     const handleResize = () => {
-        setWindowSize([(window.innerWidth * 7) / 10, window.innerHeight / 2]);
+        setWindowSize([(window.innerWidth * 7) / 10, (window.innerHeight * 6) / 10]);
     };
     useEffect(() => {
         window.addEventListener('resize', handleResize);

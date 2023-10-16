@@ -20,8 +20,8 @@ const TabDiv = styled.div`
 
 const TabGrid = styled.div`
     display: grid;
-    grid-template-rows: repeat(2, 1fr); /* 2개의 행을 생성합니다. */
-    grid-template-columns: repeat(3, 1fr); /* 3개의 열을 생성합니다. */
+    grid-template-rows: repeat(3, 1fr); /* 2개의 행을 생성합니다. */
+    grid-template-columns: repeat(2, 1fr); /* 3개의 열을 생성합니다. */
     gap: 10px; /* 그리드 아이템 사이의 간격을 조절합니다. 원하는 간격으로 조정하세요. */
 `;
 const imgSource = ['Circle.png', 'Square.png', 'Uarrow.png', 'Darrow.png', 'Rarrow.png', 'Larrow.png'];
