@@ -2,6 +2,7 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { toolUppername } from '../Common/tools';
 import { defaultColor } from '../Common/colors';
+
 const initState = {
     color: defaultColor.black,
     tool: toolUppername.PENCIL,
@@ -17,7 +18,6 @@ const canvasSlice = createSlice({
     initialState: initState,
     reducers: {
         setColor(state, action) {
-            // console.log('action : ', action.payload);
             const { color } = action.payload;
             state.color = color;
         },
@@ -27,6 +27,11 @@ const canvasSlice = createSlice({
         },
         setEditInput(state, action) {
             state.EditText = { coordX: action.payload.coordX, coordY: action.payload.coordY, text: action.payload.newInput };
+        },
+        setCanvasInit(state) {
+            state.color = defaultColor.black;
+            state.tool = toolUppername.PENCIL;
+            state.EditText = { coordX: -1, coordY: -1, text: '' };
         },
     },
 });
@@ -66,9 +71,37 @@ const saveSlice = createSlice({
         },
     },
 });
+
+const menuSlice = createSlice({
+    name: 'menuSlice',
+    initialState: { fileDrop: false },
+    reducers: {
+        setMenu(state) {
+            state.fileDrop = !state.fileDrop;
+        },
+        setMenuInit(state) {
+            state.fileDrop = false;
+        },
+    },
+});
+
+const initDrawSlice = createSlice({
+    name: 'initDrawSlice',
+    initialState: { pic: null },
+    reducers: {
+        setPic(state, action) {
+            const pic = action.payload.pic;
+            state.pic = pic;
+        },
+        clearPic(state) {
+            state.pic = null;
+        },
+    },
+});
+
 const canvasStore = configureStore(
     {
-        reducer: { canvas: canvasSlice.reducer, mouse: mouseSlice.reducer, myCanvas: saveSlice.reducer },
+        reducer: { canvas: canvasSlice.reducer, mouse: mouseSlice.reducer, myCanvas: saveSlice.reducer, dropMenu: menuSlice.reducer, picInit: initDrawSlice.reducer },
     },
     composeWithDevTools
 );
@@ -76,6 +109,8 @@ const canvasStore = configureStore(
 export const canvasAction = canvasSlice.actions;
 export const mouseAction = mouseSlice.actions;
 export const saveAction = saveSlice.actions;
+export const menuAction = menuSlice.actions;
+export const initDrawAction = initDrawSlice.actions;
 export default canvasStore;
 
 // setGray(state) {

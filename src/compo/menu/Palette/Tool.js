@@ -9,6 +9,8 @@ const ToolBox = styled.div`
     width: 30px;
     height: 30px;
     margin-right: 3px;
+    text-align: center;
+    line-height: 30px;
     &:hover {
         cursor: pointer;
     }

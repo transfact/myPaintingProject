@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toolUppername } from '../../Common/tools';
-import { mouseAction } from '../../store';
+import { mouseAction, saveAction } from '../../store';
+
 export function useOnDraw(onDraw) {
     const dispatch = useDispatch();
 
@@ -18,6 +19,7 @@ export function useOnDraw(onDraw) {
 
     const mouseDownListenerRef = useRef(null); // 새로 추가된 마우스 클릭 리스너
 
+    const { pic } = useSelector((state) => state.picInit);
     function setCanvasRef(ref) {
         canvasRef.current = ref;
     }
@@ -46,8 +48,9 @@ export function useOnDraw(onDraw) {
             link.href = image;
             link.download = 'MyDesign';
             link.click();
+            dispatch(saveAction.setCanvas({ myCanvas: false }));
         }
-    }, [myCanvas]);
+    }, [myCanvas, dispatch]);
 
     useEffect(() => {
         function computePointInCanvas(clientX, clientY) {
@@ -74,7 +77,7 @@ export function useOnDraw(onDraw) {
                 dispatch(mouseAction.setMouse({ coordX: -1, coordY: -1, src: '' }));
             }, 0);
         }
-    }, [coordX, coordY, src]);
+    }, [coordX, coordY, src, dispatch]);
 
     useEffect(() => {
         function computePointInCanvas(clientX, clientY) {
@@ -151,6 +154,16 @@ export function useOnDraw(onDraw) {
         return () => cleanup();
     }, [onDraw]);
 
+    useEffect(() => {
+        if (pic) {
+            const img = new Image();
+            img.src = pic;
+            // console.log(img);
+            const ctx = canvasRef.current.getContext('2d');
+            // console.log(ctx);
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+        }
+    }, [pic]);
     return {
         setCanvasRef,
         onCanvasMouseDown,

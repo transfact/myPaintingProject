@@ -10,8 +10,8 @@ const canvasStyle = {
     backgroundColor: 'white',
     border: '1px solid black',
     borderRadius: '5px',
-    margin: '10px 10px',
 };
+
 const NewCanvas = ({ width, height }) => {
     const dispatch = useDispatch();
     const { setCanvasRef, onCanvasMouseDown, onCanvasMouseUp } = useOnDraw(onDraw);
@@ -19,12 +19,9 @@ const NewCanvas = ({ width, height }) => {
 
     const [EditInput, setEditInput] = useState(null);
 
-    // console.log('tool : ', tool);
-    // console.log('color : ', color);
-
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && EditText.coordX !== -1 && EditText.coordY !== -1) {
-            console.log('EditText : ', EditText);
+            // console.log('EditText : ', EditText);
         }
     };
 
@@ -70,7 +67,7 @@ const NewCanvas = ({ width, height }) => {
             const imageData = ctx.getImageData(0, 0, width, height);
             //2. 클릭한 곳의 픽셀 컬러와 좌표를 얻는다.
             const targetColor = getPixelColor(imageData, start_x, start_y);
-            console.log('targetColor:', targetColor);
+            // console.log('targetColor:', targetColor);
 
             const visited = new Uint8Array(imageData.width, imageData.height);
             const stack = [{ x: start_x, y: start_y }];
@@ -110,7 +107,7 @@ const NewCanvas = ({ width, height }) => {
         }
 
         const convertedColor = hexToRgb(color);
-        console.log('convertedColor:', convertedColor);
+        // console.log('convertedColor:', convertedColor);
         const newImgData = floodFill(convertedColor, parseInt(end.x), parseInt(end.y));
         ctx.putImageData(newImgData, 0, 0);
     }
